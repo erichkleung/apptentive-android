@@ -839,14 +839,14 @@ public class Apptentive {
 	 * can run, then the most appropriate interaction takes precedence. Only one interaction at most will run per
 	 * invocation of this method.
 	 *
-	 * @param activity The Activity from which this method is called.
+	 * @param context  The Context from which this method is called.
 	 * @param event    A unique String representing the line this method is called on. For instance, you may want to have
 	 *                 the ability to target interactions to run after the user uploads a file in your app. You may then
 	 *                 call <strong><code>engage(activity, "finished_upload");</code></strong>
 	 * @return true if the an interaction was shown, else false.
 	 */
-	public static synchronized boolean engage(Activity activity, String event) {
-		return EngagementModule.engage(activity, "local", "app", null, event, null, null, (ExtendedData[]) null);
+	public static synchronized boolean engage(Context context, String event) {
+		return EngagementModule.engage(context, "local", "app", null, event, null, null, (ExtendedData[]) null);
 	}
 
 	/**
@@ -855,16 +855,16 @@ public class Apptentive {
 	 * can run, then the most appropriate interaction takes precedence. Only one interaction at most will run per
 	 * invocation of this method.
 	 *
-	 * @param activity   The Activity from which this method is called.
+	 * @param context    The Context from which this method is called.
 	 * @param event      A unique String representing the line this method is called on. For instance, you may want to have
 	 *                   the ability to target interactions to run after the user uploads a file in your app. You may then
-	 *                   call <strong><code>engage(activity, "finished_upload");</code></strong>
+	 *                   call <strong><code>engage(context, "finished_upload");</code></strong>
 	 * @param customData A Map of String keys to Object values. Objects may be Strings, Numbers, or Booleans. This data
 	 *                   is sent to the server for tracking information in the context of the engaged Event.
 	 * @return true if the an interaction was shown, else false.
 	 */
-	public static synchronized boolean engage(Activity activity, String event, Map<String, Object> customData) {
-		return EngagementModule.engage(activity, "local", "app", null, event, null, customData, (ExtendedData[]) null);
+	public static synchronized boolean engage(Context context, String event, Map<String, Object> customData) {
+		return EngagementModule.engage(context, "local", "app", null, event, null, customData, (ExtendedData[]) null);
 	}
 
 	/**
@@ -873,7 +873,7 @@ public class Apptentive {
 	 * can run, then the most appropriate interaction takes precedence. Only one interaction at most will run per
 	 * invocation of this method.
 	 *
-	 * @param activity     The Activity from which this method is called.
+	 * @param context      The Context from which this method is called.
 	 * @param event        A unique String representing the line this method is called on. For instance, you may want to have
 	 *                     the ability to target interactions to run after the user uploads a file in your app. You may then
 	 *                     call <strong><code>engage(activity, "finished_upload");</code></strong>
@@ -885,8 +885,8 @@ public class Apptentive {
 	 *                     {@link LocationExtendedData}, and {@link CommerceExtendedData}. Include each type only once.
 	 * @return true if the an interaction was shown, else false.
 	 */
-	public static synchronized boolean engage(Activity activity, String event, Map<String, Object> customData, ExtendedData... extendedData) {
-		return EngagementModule.engage(activity, "local", "app", null, event, null, customData, extendedData);
+	public static synchronized boolean engage(Context context, String event, Map<String, Object> customData, ExtendedData... extendedData) {
+		return EngagementModule.engage(context, "local", "app", null, event, null, customData, extendedData);
 	}
 
 	/**
@@ -903,7 +903,7 @@ public class Apptentive {
 
 	/**
 	 * This method can be used to determine if a call to one of the <strong><code>engage()</code></strong> methods such as
-	 * {@link #engage(Activity, String)} using the same event name will
+	 * {@link #engage(Context, String)} using the same event name will
 	 * result in the display of an  Interaction. This is useful if you need to know whether an Interaction will be
 	 * displayed before you create a UI Button, etc.
 	 *

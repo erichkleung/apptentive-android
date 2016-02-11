@@ -6,7 +6,6 @@
 
 package com.apptentive.android.sdk.module.engagement;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import com.apptentive.android.sdk.Log;
@@ -27,55 +26,55 @@ import java.util.Map;
  */
 public class EngagementModule {
 
-	public static synchronized boolean engageInternal(Activity activity, String eventName) {
-		return engage(activity, "com.apptentive", "app", null, eventName,  null, null, (ExtendedData[]) null);
+	public static synchronized boolean engageInternal(Context context, String eventName) {
+		return engage(context, "com.apptentive", "app", null, eventName,  null, null, (ExtendedData[]) null);
 	}
 
-	public static synchronized boolean engageInternal(Activity activity, String eventName, String data) {
-		return engage(activity, "com.apptentive", "app", null, eventName,  data, null, (ExtendedData[]) null);
+	public static synchronized boolean engageInternal(Context context, String eventName, String data) {
+		return engage(context, "com.apptentive", "app", null, eventName,  data, null, (ExtendedData[]) null);
 	}
 
-	public static synchronized boolean engageInternal(Activity activity, Interaction interaction, String eventName) {
-		return engage(activity, "com.apptentive", interaction.getType().name(), interaction.getId(), eventName, null, null, (ExtendedData[]) null);
+	public static synchronized boolean engageInternal(Context context, Interaction interaction, String eventName) {
+		return engage(context, "com.apptentive", interaction.getType().name(), interaction.getId(), eventName, null, null, (ExtendedData[]) null);
 	}
 
-	public static synchronized boolean engageInternal(Activity activity, Interaction interaction, String eventName, String data) {
-		return engage(activity, "com.apptentive", interaction.getType().name(), interaction.getId(), eventName, data, null, (ExtendedData[]) null);
+	public static synchronized boolean engageInternal(Context context, Interaction interaction, String eventName, String data) {
+		return engage(context, "com.apptentive", interaction.getType().name(), interaction.getId(), eventName, data, null, (ExtendedData[]) null);
 	}
 
-	public static synchronized boolean engage(Activity activity, String vendor, String interaction, String interactionId, String eventName, String data, Map<String, Object> customData, ExtendedData... extendedData) {
+	public static synchronized boolean engage(Context context, String vendor, String interaction, String interactionId, String eventName, String data, Map<String, Object> customData, ExtendedData... extendedData) {
 		try {
 			String eventLabel = generateEventLabel(vendor, interaction, eventName);
 			Log.d("engage(%s)", eventLabel);
 
-			CodePointStore.storeCodePointForCurrentAppVersion(activity.getApplicationContext(), eventLabel);
-			EventManager.sendEvent(activity.getApplicationContext(), new Event(eventLabel, interactionId, data, customData, extendedData));
-			return doEngage(activity, eventLabel);
+			CodePointStore.storeCodePointForCurrentAppVersion(context.getApplicationContext(), eventLabel);
+			EventManager.sendEvent(context.getApplicationContext(), new Event(eventLabel, interactionId, data, customData, extendedData));
+			return doEngage(context, eventLabel);
 		} catch (Exception e) {
-			MetricModule.sendError(activity.getApplicationContext(), e, null, null);
+			MetricModule.sendError(context.getApplicationContext(), e, null, null);
 		}
 		return false;
 	}
 
-	public static boolean doEngage(Activity activity, String eventLabel) {
-		Interaction interaction = InteractionManager.getApplicableInteraction(activity.getApplicationContext(), eventLabel);
+	public static boolean doEngage(Context context, String eventLabel) {
+		Interaction interaction = InteractionManager.getApplicableInteraction(context.getApplicationContext(), eventLabel);
 		if (interaction != null) {
-			CodePointStore.storeInteractionForCurrentAppVersion(activity, interaction.getId());
-			launchInteraction(activity, interaction);
+			CodePointStore.storeInteractionForCurrentAppVersion(context, interaction.getId());
+			launchInteraction(context, interaction);
 			return true;
 		}
 		Log.d("No interaction to show.");
 		return false;
 	}
 
-	public static void launchInteraction(Activity activity, Interaction interaction) {
+	public static void launchInteraction(Context context, Interaction interaction) {
 		if (interaction != null) {
 			Log.i("Launching interaction: %s", interaction.getType().toString());
 			Intent intent = new Intent();
-			intent.setClass(activity, ViewActivity.class);
+			intent.setClass(context, ViewActivity.class);
 			intent.putExtra(ActivityContent.KEY, ActivityContent.Type.INTERACTION.toString());
 			intent.putExtra(Interaction.KEY_NAME, interaction.toString());
-			activity.startActivity(intent);
+			context.startActivity(intent);
 		}
 	}
 
